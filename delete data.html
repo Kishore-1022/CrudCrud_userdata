@@ -26,6 +26,7 @@
         <h2 class="title"></h2>
         <ul id="items" class="list-group"></ul>
        </div>
+
       </div>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"></script>
       <script>
@@ -36,49 +37,50 @@
         var mail=document.querySelector("#mail");
         var ph=document.querySelector("#ph");
         
-        window.addEventListener('DOMContentLoaded',()=>{
-            
-                axios.get('https://crudcrud.com/api/8c687c3176e74749b13531e5ba566331/appointment')
+        window.addEventListener('DOMContentLoaded', init )
+            function init(){
+                axios.get('https://crudcrud.com/api/1c136c73e6774686b43599be29303d47/app')
                 .then(res=>{
                     res.data.forEach(element => {
-                        showdata(element)
-                        
+                        showdata(element)        
                     });
                 }).catch(err=>console.log(err))
-        })
-       
-
+            }
                 function showdata(res){
+                    
                 let li=document.createElement("li");
                 let del=document.createElement('button');
                 let edit=document.createElement('button');
                 
 
                 del.className='btn btn-danger btn-sm '
+                del.id=`${res._id}`
+               
                 edit.className='btn btn-info btn-sm'
                 edit.type="submit";
                 edit.innerHTML="Edit";
-                del.type="submit";
+                
                 del.innerHTML="Delete";
              
                 let m=name.value;
                 let n=mail.value;
                 let o=ph.value;
                 li.append(document.createTextNode(`${res.name} ${res.email} ${res.phoneNumber}`));
-                li.id=mail.value;  
                 li.append(edit);   
                 li.append(del);
                 ul.append(li);
                 
                 name.value="";
                 mail.value="";
-                ph.value="";  
-            }             
+                ph.value="";
+                del.addEventListener('click',deleteDetails)
 
+                function deleteDetails(e){
+                   axios.delete(`https://crudcrud.com/api/1c136c73e6774686b43599be29303d47/app/${e.target.id}`)
+                   li.remove(e.target.id.parentNode)
+            }
+            } 
         form.addEventListener("submit", add);
-
-       
-        
         function add(e){
             e.preventDefault();
             if(name.value==="" || mail.value==="" || ph.value==""){
@@ -87,7 +89,7 @@
                 obj.name=name.value;
                 obj.email=mail.value;
                 obj.phoneNumber=ph.value;
-                axios.post("https://crudcrud.com/api/8c687c3176e74749b13531e5ba566331/appointment" , obj)
+                axios.post("https://crudcrud.com/api/1c136c73e6774686b43599be29303d47/app" , obj)
                 .then((res)=>{
                     showdata(res.data)
                 }).catch((err)=>{
@@ -98,7 +100,7 @@
             }
            
         }
-        
+       
         
         
       

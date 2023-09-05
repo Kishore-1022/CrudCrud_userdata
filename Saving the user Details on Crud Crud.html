@@ -6,6 +6,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <link rel="icon" href="">
     <title>Item Listner</title>
+    <style>
+        li{
+            list-style:none ;
+        }
+    </style>
 </head>
 <body>
     
@@ -30,16 +35,25 @@
         let name=document.querySelector("#name");
         var mail=document.querySelector("#mail");
         var ph=document.querySelector("#ph");
-        form.addEventListener("submit", add);
-        function add(e){
-            e.preventDefault();
-            if(name.value==="" || mail.value==="" || ph.value==""){
-                alert("Please enter the values?");
-            }
-            else{
+        
+        window.addEventListener('DOMContentLoaded',()=>{
+            
+                axios.get('https://crudcrud.com/api/8c687c3176e74749b13531e5ba566331/appointment')
+                .then(res=>{
+                    res.data.forEach(element => {
+                        showdata(element)
+                        
+                    });
+                }).catch(err=>console.log(err))
+        })
+       
+
+                function showdata(res){
                 let li=document.createElement("li");
                 let del=document.createElement('button');
                 let edit=document.createElement('button');
+                
+
                 del.className='btn btn-danger btn-sm '
                 edit.className='btn btn-info btn-sm'
                 edit.type="submit";
@@ -50,47 +64,126 @@
                 let m=name.value;
                 let n=mail.value;
                 let o=ph.value;
-                li.append(document.createTextNode(`${name.value} ${mail.value} ${ph.value}`));
+                li.append(document.createTextNode(`${res.name} ${res.email} ${res.phoneNumber}`));
                 li.id=mail.value;  
                 li.append(edit);   
                 li.append(del);
-               
                 ul.append(li);
-                del.addEventListener("click",dele);
-                function dele(e){
-                  e.preventDefault();
-                  let a=del.parentElement;        
-                  localStorage.removeItem(`${a.id}`);
-                  a.remove();
-                };
-                edit.addEventListener("click",edited);
-                function edited(e){
-                    e.preventDefault();
-                    let b=edit.parentElement;        
-                    localStorage.removeItem(`${b.id}`);
-                    b.remove();
-                    name.value=m;
-                    mail.value=n;
-                    ph.value=o;
-                };
+                
+                name.value="";
+                mail.value="";
+                ph.value="";  
+            }             
 
+        form.addEventListener("submit", add);
+
+       
+        
+        function add(e){
+            e.preventDefault();
+            if(name.value==="" || mail.value==="" || ph.value==""){
+                alert("Please enter the values?");
+            }else{
                 obj.name=name.value;
                 obj.email=mail.value;
                 obj.phoneNumber=ph.value;
-                // localStorage.setItem(obj.email,JSON.stringify(obj));
-                axios.post("https://crudcrud.com/api/9ce788369d98411db3b8b4a36c86c7/appintmentD" , obj)
+                axios.post("https://crudcrud.com/api/8c687c3176e74749b13531e5ba566331/appointment" , obj)
                 .then((res)=>{
-                    console.log(res)
+                    showdata(res.data)
                 }).catch((err)=>{
                     document.body.innerHTML+="<h4>Something went Worng</h4>"
                     console.log(err) 
                 })
-                name.value="";
-                mail.value="";
-                ph.value="";
-            };
-        };
+                
+            }
+           
+        }
         
+        
+        
+      
+            
+        //     form.addEventListener("submit", add);
+
+        //     function add(e){
+        //     e.preventDefault();
+        //     if(name.value==="" || mail.value==="" || ph.value==""){
+        //         alert("Please enter the values?");
+        //     }
+        //     else{
+        //         function showdata(res){
+        //         let li=document.createElement("li");
+        //         let del=document.createElement('button');
+        //         let edit=document.createElement('button');
+        //         del.className='btn btn-danger btn-sm '
+        //         edit.className='btn btn-info btn-sm'
+        //         edit.type="submit";
+        //         edit.innerHTML="Edit";
+        //         del.type="submit";
+        //         del.innerHTML="Delete";
+             
+        //         let m=name.value;
+        //         let n=mail.value;
+        //         let o=ph.value;
+        //         li.append(document.createTextNode(`${res.data.name} ${res.data.email} ${res.data.phoneNumber}`));
+        //         li.id=mail.value;  
+        //         li.append(edit);   
+        //         li.append(del);
+               
+        //         ul.append(li);
+
+        //     window.addEventListener('DOMContentLoaded',()=>{
+            
+        //     axios.get('https://crudcrud.com/api/9ce788369d98411db3b8b4a36c88e6c7/laxman')
+        //     .then(res=>{console.log(res)
+        //         res.data.forEach(element => {
+        //             showdata(element)
+                    
+        //         });
+        //     }).catch(err=>console.log(err))
+        // })
+        
+        //         del.addEventListener("click",dele);
+        //         function dele(e){
+        //           e.preventDefault();
+        //           let a=del.parentElement;        
+        //           localStorage.removeItem(`${a.id}`);
+        //           a.remove();
+        //         };
+        //         edit.addEventListener("click",edited);
+        //         function edited(e){
+        //             e.preventDefault();
+        //             let b=edit.parentElement;        
+        //             localStorage.removeItem(`${b.id}`);
+        //             b.remove();
+        //             name.value=m;
+        //             mail.value=n;
+        //             ph.value=o;
+        //         };
+        //         name.value="";
+        //         mail.value="";
+        //         ph.value="";
+        //     }
+        //         obj.name=name.value;
+        //         obj.email=mail.value;
+        //         obj.phoneNumber=ph.value;
+        //         // localStorage.setItem(obj.email,JSON.stringify(obj));
+        //         axios.post("https://crudcrud.com/api/9ce788369d98411db3b8b4a36c88e6c7/laxman" , obj)
+        //         .then((res)=>{
+        //             showdata(res)
+        //             console.log(res)
+        //             console.log(res.data.phoneNumber)
+        //         }).catch((err)=>{
+        //             document.body.innerHTML+="<h4>Something went Worng</h4>"
+        //             console.log(err) 
+        //         })
+                
+        //     };
+        // };
+            
+    
+       
+                
       </script>
 </body>
 </html>
